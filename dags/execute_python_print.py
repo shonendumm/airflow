@@ -7,6 +7,12 @@ default_args = {
     'owner': 'soohian',
 }
 
+def print_hello(name):
+    print(f"Hello {name}!")
+
+def print_goodbye(name, city):
+    print(f"Goodbye {name} from {city}!")
+
 with DAG(
     dag_id='execute_python_print',
     description='Execute Python Print',
@@ -16,12 +22,17 @@ with DAG(
     tags = ['beginner', 'python', 'print']
 ) as dag:
     
-    def print_hello():
-        print("Hello Soohian!")
-    
-    task = PythonOperator(
+    taskA = PythonOperator(
         task_id='print_hello',
-        python_callable=print_hello
+        python_callable=print_hello,
+        op_kwargs={'name': 'Soohian'}
+
     )
 
-task
+    taskB = PythonOperator(
+        task_id='print_goodbye',
+        python_callable=print_goodbye,
+        op_kwargs={'name': 'Soohian', 'city': 'Singapore'}
+    )
+
+taskA >> taskB
